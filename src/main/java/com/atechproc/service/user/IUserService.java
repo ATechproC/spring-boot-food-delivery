@@ -4,6 +4,7 @@ import com.atechproc.dto.UserDto;
 import com.atechproc.model.User;
 
 public interface IUserService {
-    UserDto getUserProfile(String jwt);
+    User getUserProfile(String jwt);
     User getUserByEmail(String email);
+    User getUserById(Long userId);
 }

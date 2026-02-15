@@ -1,4 +1,4 @@
-package com.atechproc.request;
+package com.atechproc.request.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

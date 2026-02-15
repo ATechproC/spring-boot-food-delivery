@@ -17,12 +17,10 @@ public class UserService implements  IUserService {
     private final JwtProvider jwtProvider;
 
     @Override
-    public UserDto getUserProfile(String jwt) {
+    public User getUserProfile(String jwt) {
         String email = jwtProvider.getEmailFromJwtToken(jwt);
 
-        User user = getUserByEmail(email);
-
-        return UserMapper.toDto(user);
+        return getUserByEmail(email);
     }
 
     @Override
@@ -32,5 +30,11 @@ public class UserService implements  IUserService {
             throw new ResourceNotFoundException("User not found with email " + email);
         }
         return user;
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

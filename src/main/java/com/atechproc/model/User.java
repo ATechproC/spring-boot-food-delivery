@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,4 +35,17 @@ public class User {
     @Column(nullable = false, length = 20)
     private USER_ROLE role;
 
+    @OneToOne(mappedBy = "customer",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
+
+    @ElementCollection
+    private List<RestaurantDto> favorites = new ArrayList<>();
+
+    @OneToMany(mappedBy = "costumer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAddress> addresses = new ArrayList<>();
+
+    private String status;
 }

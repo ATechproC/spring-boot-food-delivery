@@ -1,4 +1,4 @@
-package com.atechproc.request;
+package com.atechproc.request.auth;
 
 import com.atechproc.enums.USER_ROLE;
 import jakarta.validation.constraints.NotBlank;
