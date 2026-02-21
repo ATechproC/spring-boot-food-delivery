@@ -41,8 +41,8 @@ public class User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
-    @ElementCollection
-    private List<RestaurantDto> favorites = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteRestaurant> favorites = new ArrayList<>();
 
     @OneToMany(mappedBy = "costumer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserAddress> addresses = new ArrayList<>();
