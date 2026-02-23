@@ -12,7 +12,7 @@ public class UserMapper {
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setRole(user.getRole().toString());
-        userDto.setFavorites(ResMapper.toFavResS(user.getFavorites()));
+        userDto.setFavoritesRestaurantIds(user.getFavoritesRestaurantIds());
 
         return userDto;
     }

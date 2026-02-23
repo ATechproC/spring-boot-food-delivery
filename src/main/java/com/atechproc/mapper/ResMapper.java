@@ -1,10 +1,9 @@
 package com.atechproc.mapper;
 
-import com.atechproc.dto.FavResDto;
 import com.atechproc.dto.ResDto;
 import com.atechproc.dto.RestaurantAddressDto;
-import com.atechproc.model.FavoriteRestaurant;
 import com.atechproc.model.Restaurant;
+import com.atechproc.model.RestaurantDto;
 
 import java.util.List;
 
@@ -40,17 +39,13 @@ public class ResMapper {
                 .map(ResMapper::toDto).toList();
     }
 
-    public static FavResDto toFavRes(FavoriteRestaurant res) {
-        FavResDto resDto = new FavResDto();
+    public static RestaurantDto toRestaurantDto(Restaurant res) {
+        RestaurantDto resDto = new RestaurantDto();
         resDto.setId(res.getId());
         resDto.setTitle(res.getTitle());
-        resDto.setImages(res.getImages());
         resDto.setDescription(res.getDescription());
+        resDto.setImages(res.getImages());
 
         return resDto;
-    }
-
-    public static List<FavResDto> toFavResS(List<FavoriteRestaurant> restaurants) {
-        return restaurants.stream().map(ResMapper::toFavRes).toList();
     }
 }

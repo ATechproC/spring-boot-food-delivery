@@ -11,4 +11,5 @@ public class CartItemDto {
     private FoodDto food;
     private Integer quantity;
     private BigDecimal totalPrice;
+    private List<IngredientsItemDto> ingredientsItems;
 }

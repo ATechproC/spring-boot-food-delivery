@@ -21,6 +21,7 @@ public class OrderMapper {
         dto.setPayment(order.getPayment());
         dto.setCreatedAt(order.getCreatedAt());
         dto.setDeliveryAddress(toUserAddressDto(order.getDeliveryAddress()));
+        dto.setUsername(order.getCustomer().getUsername());
 
         return dto;
     }

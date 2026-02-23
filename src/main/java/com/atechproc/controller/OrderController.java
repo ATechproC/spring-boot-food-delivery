@@ -58,8 +58,11 @@ public class OrderController {
     }
 
     @GetMapping("/restaurant")
-    public ResponseEntity<ApiResponse> getRestaurantOrders(@RequestHeader("Authorization") String jwt){
-        List<OrderDto> orders = orderService.getRestaurantOrders(jwt);
+    public ResponseEntity<ApiResponse> getRestaurantOrders(
+            @RequestParam(required = false) ORDER_STATUS status,
+            @RequestHeader("Authorization") String jwt
+    ){
+        List<OrderDto> orders = orderService.getRestaurantOrders(jwt, status);
         return ResponseEntity.ok(new ApiResponse("Success", orders));
     }
 

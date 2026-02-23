@@ -93,11 +93,10 @@ public class FoodService implements IFoodService {
     public List<FoodDto> getRestaurantFoods(
             Long resId,
             Boolean isVegetarian,
-            Boolean isSeasonal,
-            Long categoryId
+            Boolean isSeasonal
     ) {
 
-        List<Food> foods = foodRepository.findByFoodCategory_id(categoryId);
+        List<Food> foods = foodRepository.findByRestaurant_id(resId);
 
         if(isVegetarian != null && isVegetarian) {
             foods = foods.stream().filter(Food::getIsVegetarian).toList();
@@ -137,4 +136,6 @@ public class FoodService implements IFoodService {
         List<Food> foods = foodRepository.findByRestaurant_id(res.getId());
         return FoodMapper.toDTOs(foods);
     }
+    
+
 }

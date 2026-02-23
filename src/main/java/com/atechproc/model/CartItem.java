@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,7 +32,10 @@ public class CartItem {
     @JoinColumn(name = "food_id")
     private Food food;
 
-    private Integer quantity = 0;
+    @OneToMany
+    private List<IngredientsItem> ingredientsItems = new ArrayList<>();
+
+    private Integer quantity = 1;
 
     private BigDecimal totalPrice = BigDecimal.ZERO;
 

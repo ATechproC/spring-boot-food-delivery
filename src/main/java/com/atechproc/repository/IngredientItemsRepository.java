@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IngredientItemsRepository extends JpaRepository<IngredientsItem, Long> {
     IngredientsItem findByName(String name);

@@ -13,7 +13,7 @@ public interface IFoodService {
     List<FoodDto> searchFood(String keyword);
     Food getFoodById(Long id);
     List<FoodDto> getRestaurantFoods(
-            Long resId, Boolean isVegetarian, Boolean Boolean, Long categoryId
+            Long resId, Boolean isVegetarian, Boolean Boolean
     );
     FoodDto updateAvailabilityStatus(Long id, String jwt) throws BadRequestException;
     List<FoodDto> getAllRestaurantFood(String jwt);

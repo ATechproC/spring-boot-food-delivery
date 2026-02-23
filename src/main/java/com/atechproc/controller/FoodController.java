@@ -63,10 +63,9 @@ public class FoodController {
     public ResponseEntity<ApiResponse> getRestaurantFoods(
             @PathVariable Long resId,
             @RequestParam(required = false) Boolean isVegetarian,
-            @RequestParam(required = false) Boolean isSeasonal,
-            @RequestParam Long categoryId
+            @RequestParam(required = false) Boolean isSeasonal
     ) {
-        List<FoodDto> foods = foodService.getRestaurantFoods(resId, isVegetarian, isSeasonal, categoryId);
+        List<FoodDto> foods = foodService.getRestaurantFoods(resId, isVegetarian, isSeasonal);
         return ResponseEntity.ok(new ApiResponse("Success", foods));
     }
 

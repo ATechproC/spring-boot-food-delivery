@@ -16,6 +16,7 @@ public class CartMapper {
         dto.setFood(FoodMapper.toDto(item.getFood()));
         dto.setQuantity(item.getQuantity());
         dto.setTotalPrice(item.getTotalPrice());
+        dto.setIngredientsItems(IngredientsItemMapper.toDTOs(item.getIngredientsItems()));
 
         return dto;
     }

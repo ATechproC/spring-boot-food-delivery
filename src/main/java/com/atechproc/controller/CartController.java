@@ -5,8 +5,10 @@ import com.atechproc.dto.CartItemDto;
 import com.atechproc.mapper.CartMapper;
 import com.atechproc.model.Cart;
 import com.atechproc.model.CartItem;
+import com.atechproc.request.cart.AddToCartRequest;
 import com.atechproc.response.ApiResponse;
 import com.atechproc.service.cart.ICartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,13 @@ public class CartController {
 
     @PostMapping("/add-item")
     public ResponseEntity<ApiResponse> addItemToCart(
-            @RequestParam int quantity,
+            @Valid
+            @RequestBody
+            AddToCartRequest request,
             @RequestParam Long foodId,
             @RequestHeader("Authorization") String jwt
     ) throws BadRequestException {
-        CartItemDto cartItem = cartService.addItemToCart(quantity, foodId, jwt);
+        CartItemDto cartItem = cartService.addItemToCart( foodId, jwt, request);
         return ResponseEntity.ok(new ApiResponse("item added to cart successfully", cartItem));
     }
 

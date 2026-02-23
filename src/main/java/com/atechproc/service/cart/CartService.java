@@ -10,6 +10,7 @@ import com.atechproc.model.Food;
 import com.atechproc.model.User;
 import com.atechproc.repository.CartItemRepository;
 import com.atechproc.repository.CartRepository;
+import com.atechproc.request.cart.AddToCartRequest;
 import com.atechproc.service.food.FoodService;
 import com.atechproc.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class CartService implements ICartService {
     private final UserService userService;
 
     @Override
-    public CartItemDto addItemToCart(int quantity, Long foodId, String jwt)
+    public CartItemDto addItemToCart(Long foodId, String jwt, AddToCartRequest request)
             throws BadRequestException {
 
         User user = userService.getUserProfile(jwt);
@@ -39,19 +40,24 @@ public class CartService implements ICartService {
 
         for(CartItem cartItem : cart.getItems()) {
             if(cartItem.getFood().getId().equals(foodId)) {
-                updateCartItemQuantity(cartItem.getId(), quantity, jwt);
-                return CartMapper.toCartItemDto(cartItem);
+//                updateCartItemQuantity(cartItem.getId(), quantity, jwt);
+                cartItem.setIngredientsItems(request.getIngredientsItems());
+                CartItem savedCartItem = cartItemRepository.save(cartItem);
+                return CartMapper.toCartItemDto(savedCartItem);
             }
         }
 
         CartItem cartItem = new CartItem();
         cartItem.setCart(user.getCart());
         cartItem.setFood(food);
-        cartItem.setQuantity(quantity);
+//        cartItem.setQuantity(quantity);
         cartItem.calculateTotalPrice();
+        System.out.println("##############################");
+        cartItem.setIngredientsItems(request.getIngredientsItems());
 
         CartItem savedItem = cartItemRepository.save(cartItem);
 
+        cart.getItems().add(savedItem);
         cart.calculateCartTotalPrice();
         cartRepository.save(cart);
 
@@ -63,6 +69,10 @@ public class CartService implements ICartService {
             throws BadRequestException {
         CartItem cartItem = getCartItemById(itemId);
         User user = userService.getUserProfile(jwt);
+
+        if(quantity < 0) {
+            quantity = 0;
+        }
 
         if(!user.getCart().getItems().contains(cartItem)) {
             throw new BadRequestException("Your not allowed to update this cartItem quantity.");

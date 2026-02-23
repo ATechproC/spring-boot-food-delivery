@@ -1,12 +1,10 @@
 package com.atechproc.service.res;
 
-import com.atechproc.dto.FavResDto;
 import com.atechproc.dto.ResDto;
 import com.atechproc.exception.AlreadyExistsException;
 import com.atechproc.exception.ResourceNotFoundException;
 import com.atechproc.mapper.ResMapper;
 import com.atechproc.model.*;
-import com.atechproc.repository.FavoriteRestaurantRepository;
 import com.atechproc.repository.ResRepository;
 import com.atechproc.repository.RestaurantAddressRepository;
 import com.atechproc.repository.UserRepository;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,7 +28,6 @@ public class ResService implements IResService {
     private final ResRepository resRepository;
     private final IUserService userService;
     private final RestaurantAddressRepository restaurantAddressRepository;
-    private final FavoriteRestaurantRepository favResRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -197,31 +195,43 @@ public class ResService implements IResService {
     }
 
     @Override
-    public FavResDto addResToFavorite(Long resId, String jwt){
+    public String addResToFavorite(Long resId, String jwt){
 
         Restaurant res = findRestaurantById(resId);
-
         User user = userService.getUserProfile(jwt);
 
-        FavoriteRestaurant favoriteRestaurant = favResRepository.findByTitleAndDescriptionAndUser(
-            res.getTitle(), res.getDescription(), res.getOwner()
-        ).orElseGet(() -> {
-            FavoriteRestaurant favRes = new FavoriteRestaurant();
-            favRes.setDescription(res.getDescription());
-            favRes.setTitle(res.getTitle());
-            favRes.setImages(res.getImages());
-            favRes.setUser(user);
+        if(user.getFavoritesRestaurantIds().contains(res.getId())) {
+            user.getFavoritesRestaurantIds().remove(res.getId());
+            userRepository.save(user);
+            return "Removed from favorites";
+        }else {
+            user.getFavoritesRestaurantIds().add(res.getId());
+            userRepository.save(user);
+            return "Added to favorites";
+        }
+    }
 
-            return favResRepository.save(favRes);
-        });
+    @Override
+    public Boolean isUserFavoriteRestaurant(String jwt, Long resId) {
+        User user = userService.getUserProfile(jwt);
+        Restaurant res = findRestaurantById(resId);
+        return user.getFavoritesRestaurantIds().contains(resId);
+    }
 
-        if(!user.getFavorites().contains(favoriteRestaurant)) {
-            user.getFavorites().add(favoriteRestaurant);
-        }else user.getFavorites().remove(favoriteRestaurant);
+    @Override
+    public List<ResDto> getUserFavoriteRestaurant(String jwt) {
+        User user = userService.getUserProfile(jwt);
 
-        userRepository.save(user);
+        List<Long> ids = user.getFavoritesRestaurantIds();
 
-        return ResMapper.toFavRes(favoriteRestaurant);
+        List<Restaurant> restaurants = new ArrayList<>();
+
+        for(Long id : ids) {
+            Restaurant res = findRestaurantById(id);
+            restaurants.add(res);
+        }
+
+        return ResMapper.toDTOs(restaurants);
     }
 
     @Override

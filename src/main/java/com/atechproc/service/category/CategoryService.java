@@ -8,6 +8,7 @@ import com.atechproc.model.FoodCategory;
 import com.atechproc.model.Restaurant;
 import com.atechproc.model.User;
 import com.atechproc.repository.FoodCategoryRepository;
+import com.atechproc.repository.ResRepository;
 import com.atechproc.request.category.CreateCategoryRequest;
 import com.atechproc.request.category.UpdateCategoryRequest;
 import com.atechproc.service.res.IResService;
@@ -25,6 +26,7 @@ import java.util.List;
 public class CategoryService implements ICategoryService {
 
     private final FoodCategoryRepository categoryRepository;
+    private final ResRepository resRepository;
     private final IUserService userService;
     private final IResService resService;
 
@@ -35,10 +37,10 @@ public class CategoryService implements ICategoryService {
         User user = userService.getUserProfile(jwt);
         Restaurant res = resService.getResByUserId(user.getId());
 
-        FoodCategory existingCategory = categoryRepository.findByName(request.getName());
+        FoodCategory existingCategory = categoryRepository.findByNameAndRestaurant_id(request.getName(), res.getId());
 
-        if(res.getFoodCategories().contains(existingCategory)) {
-            throw new AlreadyExistsException("Category already exists");
+        if(existingCategory != null) {
+            throw new AlreadyExistsException("Food category already exists!");
         }
 
         FoodCategory foodCategory = new FoodCategory();
@@ -47,14 +49,18 @@ public class CategoryService implements ICategoryService {
 
         FoodCategory savedCategory = categoryRepository.save(foodCategory);
 
-        System.out.println("##########################################");
+        res.getFoodCategories().add(savedCategory);
+        resRepository.save(res);
+
         return CategoryMapper.toDto(savedCategory);
     }
 
     @Override
     @PreAuthorize("hasRole('RESTAURANT_OWNER')")
     public List<CategoryDto> getFoodCategoryByRestaurantId(String jwt) {
-        List<FoodCategory> categories = categoryRepository.findAll();
+        User user = userService.getUserProfile(jwt);
+        Restaurant res = resService.getResByUserId(user.getId());
+        List<FoodCategory> categories = categoryRepository.findByRestaurant_id(res.getId());
         return CategoryMapper.toDTOs(categories);
     }
 

@@ -1,13 +1,14 @@
 package com.atechproc.controller;
 
-import com.atechproc.dto.FavResDto;
 import com.atechproc.dto.ResDto;
+import com.atechproc.model.RestaurantDto;
 import com.atechproc.response.ApiResponse;
 import com.atechproc.service.res.IResService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.ListView;
 import java.util.List;
 
 @RestController
@@ -22,8 +23,8 @@ public class RestaurantController {
             @PathVariable("resId") Long resId,
             @RequestHeader("Authorization") String jwt
     ) {
-        FavResDto res = resService.addResToFavorite(resId, jwt);
-        return ResponseEntity.ok(new ApiResponse("Added to favorites", res));
+        String response = resService.addResToFavorite(resId, jwt);
+        return ResponseEntity.ok(new ApiResponse(response, ""));
     }
 
     @GetMapping("/search")
@@ -47,4 +48,23 @@ public class RestaurantController {
         ResDto res = resService.getByRestaurantId(resId);
         return ResponseEntity.ok(new ApiResponse("Success",  res));
     }
+
+    @GetMapping("/isFavorite/{resId}")
+    public ResponseEntity<ApiResponse> isFavoriteResHandler(
+            @PathVariable("resId") Long resId,
+            @RequestHeader("Authorization") String jwt
+    ) {
+        Boolean isFavorite = resService.isUserFavoriteRestaurant(jwt, resId);
+        return ResponseEntity.ok(new ApiResponse("Success", isFavorite));
+    }
+
+    @GetMapping("/user/favorite")
+    public ResponseEntity<ApiResponse> getUserFavoriteRestaurants(
+            @RequestHeader("Authorization") String jwt
+    ) {
+        List<ResDto> res = resService.getUserFavoriteRestaurant(jwt);
+        return ResponseEntity.ok(new ApiResponse("Success", res));
+    }
+
+
 }

@@ -17,5 +17,6 @@ public class OrderDto {
     private String payment;
     private int totalItem;
     private BigDecimal totalPrice;
+    private String username;
     private LocalDateTime createdAt;
 }

@@ -13,6 +13,6 @@ public interface IOrderService {
     OrderDto updateOrderStatus(ORDER_STATUS status, Long orderId, String jwt) throws Exception;
     void cancelOrder(Long orderId, String jwt) throws Exception;
     List<OrderDto> getUserOrders(String jwt);
-    List<OrderDto> getRestaurantOrders(String jwt);
+    List<OrderDto> getRestaurantOrders(String jwt, ORDER_STATUS status);
     Order getOrderById(Long orderId);
 }

@@ -1,9 +1,8 @@
 package com.atechproc.service.res;
 
-import com.atechproc.dto.FavResDto;
 import com.atechproc.dto.ResDto;
 import com.atechproc.model.Restaurant;
-import com.atechproc.model.User;
+import com.atechproc.model.RestaurantDto;
 import com.atechproc.request.res.CreateRestaurantRequest;
 import com.atechproc.request.res.UpdateRestaurantRequest;
 import org.apache.coyote.BadRequestException;
@@ -20,5 +19,7 @@ public interface IResService {
     List<ResDto> getAllRestaurants();
     List<ResDto> searchForRestaurants(String keyword);
     ResDto getByRestaurantId(Long resId);
-    FavResDto addResToFavorite(Long resId, String jwt);
+    String addResToFavorite(Long resId, String jwt);
+    Boolean isUserFavoriteRestaurant(String jwt, Long resId);
+    List<ResDto> getUserFavoriteRestaurant(String jwt);
 }

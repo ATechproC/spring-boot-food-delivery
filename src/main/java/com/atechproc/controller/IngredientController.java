@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("${api.prefix}")
@@ -84,7 +85,7 @@ public class IngredientController {
             @RequestParam Long categoryId
     ) throws Exception {
         IngredientsItemDto item = ingredientService.updateIngredientItemStock(itemId, categoryId);
-        return ResponseEntity.ok(new ApiResponse("Success", item));
+        return ResponseEntity.ok(new ApiResponse("Status updated successfully", item));
     }
 
     @GetMapping("/ingredient-items/{itemId}")

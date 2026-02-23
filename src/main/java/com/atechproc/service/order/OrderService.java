@@ -123,9 +123,16 @@ public class OrderService implements IOrderService {
 
     @Override
     @PreAuthorize("hasRole('RESTAURANT_OWNER')")
-    public List<OrderDto> getRestaurantOrders(String jwt) {
+    public List<OrderDto> getRestaurantOrders(String jwt, ORDER_STATUS status) {
         User user = userService.getUserProfile(jwt);
-        List<Order> orders = orderRepository.findByCustomer_id(user.getId());
+        Restaurant res = resService.getResByUserId(user.getId());
+        List<Order> orders = orderRepository.findByRestaurant_id(res.getId());
+
+        if(status != null) {
+            orders = orders.stream()
+                    .filter(order -> order.getOrderStatus() == status).toList();
+        }
+
         return OrderMapper.toOrderDTOs(orders);
     }
 
